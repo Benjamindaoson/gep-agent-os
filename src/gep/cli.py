@@ -8,6 +8,7 @@ from .store import GEPStore
 from .git_context import inspect_repo
 from .ledger import RunLedger
 from .workflow import run_goal_workflow
+from .dashboard import serve
 from .integrations import OpenClaw,OpenHands,IntegrationError
 
 
@@ -61,6 +62,8 @@ def build_parser() -> argparse.ArgumentParser:
     check=subs.add_parser("poll-run")
     check.add_argument("run_id")
     subs.add_parser("runs")
+    dash=subs.add_parser("dashboard")
+    dash.add_argument("--port",type=int,default=8765)
     flow=subs.add_parser("goal-run")
     flow.add_argument("task_id")
     flow.add_argument("--provider",choices=["openclaw","openhands"],required=True)
@@ -114,6 +117,9 @@ def main(argv: list[str] | None = None) -> None:
             result=RunLedger(args.db).launch(args.task_id,args.provider,args.instruction,args.workspace,args.approve)
         elif command == "poll-run":
             result=RunLedger(args.db).poll(args.run_id)
+        elif command == "dashboard":
+            serve(args.db,args.port)
+            return
         elif command == "goal-run":
             result=run_goal_workflow(args.db,args.task_id,args.provider,args.instruction,
                                      args.workspace,args.approve,args.include_activity)
