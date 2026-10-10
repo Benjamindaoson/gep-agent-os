@@ -135,7 +135,7 @@ def accept_task(id:str,user:User=Depends(me),db:Session=Depends(db_session)):
 @app.post("/api/missions")
 def add_mission(data:MissionIn,user:User=Depends(me),db:Session=Depends(db_session)):
  own(db,Goal,data.goal_id,user)
- m=Mission(user_id=user.id,**data.model_dump());db.add(m);emit(db,user,m,"created");db.commit()
+ m=Mission(user_id=user.id,**data.model_dump());db.add(m);db.flush();emit(db,user,m,"created");db.commit()
  return {"id":m.id,"state":m.state}
 @app.post("/api/missions/{id}/approve")
 def approve_mission(id:str,user:User=Depends(me),db:Session=Depends(db_session)):
