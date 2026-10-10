@@ -6,7 +6,7 @@ from typing import Annotated
 from fastapi import FastAPI,Depends,HTTPException,Request,Response
 from fastapi.responses import HTMLResponse,FileResponse
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from pydantic import BaseModel,EmailStr,Field
+from pydantic import BaseModel,Field
 from sqlalchemy import select,func
 from sqlalchemy.orm import Session
 from .db import Base,engine,Session as DB
