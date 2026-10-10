@@ -1,0 +1,43 @@
+name: Website Visual QA
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - "scripts/visual_smoke_site.py"
+      - ".github/workflows/site-visual.yml"
+  pull_request:
+    paths:
+      - "site/**"
+      - "scripts/visual_smoke_site.py"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  desktop-and-mobile:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install playwright==1.55.0
+      - run: python -m playwright install --with-deps chromium
+      - name: Start local GitHub Pages equivalent
+        run: |
+          python -m http.server 8766 --bind 127.0.0.1 --directory site >/tmp/gep-site-server.log 2>&1 &
+          echo $! > /tmp/gep-site-server.pid
+      - name: Run real desktop and mobile browser checks
+        run: python scripts/visual_smoke_site.py
+      - name: Upload screenshots (including on failure)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mova-site-desktop-mobile-screenshots
+          path: site-screenshots/
+          if-no-files-found: warn
