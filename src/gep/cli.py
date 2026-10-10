@@ -16,6 +16,7 @@ from .resources import recovery_plan
 from .workspace import create_snapshot,restore_snapshot
 from .life import LifePortfolio
 from .providers import github_repo,vercel_project,huggingface_dataset
+from .service import ObservationJournal,worker_loop
 from .integrations import OpenClaw,OpenHands,IntegrationError
 
 
@@ -59,6 +60,12 @@ def build_parser() -> argparse.ArgumentParser:
     cp = subs.add_parser("checkpoint")
     cp.add_argument("project_id")
     subs.add_parser("overview")
+    obs=subs.add_parser("activity-import")
+    obs.add_argument("--hours",type=int,default=24)
+    subs.add_parser("activity-latest")
+    daemon=subs.add_parser("worker-loop")
+    daemon.add_argument("--interval",type=int,default=15)
+    daemon.add_argument("--once",action="store_true")
     life=subs.add_parser("life-plan")
     life.add_argument("goal_id")
     life.add_argument("--priority",type=int,default=3)
@@ -173,6 +180,12 @@ def main(argv: list[str] | None = None) -> None:
                 result["git_workspace"] = inspect_repo(args.repo)
         elif command == "checkpoint":
             result = {"snapshot_id": store.checkpoint(args.project_id)}
+        elif command == "activity-import":
+            result=ObservationJournal(args.db).import_local(args.hours)
+        elif command == "activity-latest":
+            result=ObservationJournal(args.db).latest()
+        elif command == "worker-loop":
+            result=worker_loop(args.db,args.interval,args.once)
         elif command == "life-plan":
             LifePortfolio(args.db).plan(args.goal_id,args.priority,args.protected,
                                          args.target,args.weekly_hours)
