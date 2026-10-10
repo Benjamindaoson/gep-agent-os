@@ -14,3 +14,10 @@
 当前助手对 GitHub 源码有写入权限，但 GitHub Actions Token 无权替仓库所有者自动开启 Pages 功能。网站地址只有 Pages 启用并部署成功后才正式可访问。
 
 官网为**产品宣传站**，不等于 Cloud App 已正式上线。下载按钮指向真实的 GitHub Releases Alpha 版本。
+
+## 已核实的首次发布
+
+- GitHub Pages 原生 build/deployment workflow **38020550828**：成功。
+- GitHub 工作流 `Sync GEP website to gh-pages` run **38020578684**：成功。
+- GitHub 官方部署输出地址：**https://benjamindaoson.github.io/gep-agent-os/**。
+- 首次站点构建可能受到 GitHub Pages 缓存和传播延迟影响；检查 Actions 部署日志与在线访问情况。
