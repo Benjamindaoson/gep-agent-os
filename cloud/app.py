@@ -157,3 +157,7 @@ def resume_mission(id:str,user:User=Depends(me),db:Session=Depends(db_session)):
 def mission_note(id:str,data:Review,user:User=Depends(me),db:Session=Depends(db_session)):
  m=own(db,Mission,id,user)
  m.progress=data.note;emit(db,user,m,"progress_note",data.note);db.commit();return {"ok":True}
+
+# Import after app construction to avoid cross-module import recursion.
+from . import mobile as mobile_routes
+app.include_router(mobile_routes.router)

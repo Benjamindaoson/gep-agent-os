@@ -16,7 +16,7 @@ input,select,button,textarea{font:inherit;border-radius:9px;padding:11px 13px}in
 <div class="panel"><h2>專案組合</h2><form id="projectform"><input name="name" placeholder="專案名稱" required><div class="line"><select name="goal_id" class="goal-options"></select><button>建立</button></div></form><div id="projects"></div></div>
 <div class="panel"><h2>真正的成果</h2><form id="taskform"><input name="title" placeholder="里程碑／可驗收任務" required><div class="line"><select name="project_id" id="project-options"></select><button>新增</button></div></form><div id="tasks"></div></div>
 <div class="panel"><h2>長期任務</h2><form id="missionform"><select name="goal_id" class="goal-options"></select><textarea name="instruction" rows="3" placeholder="例如：每週整理項目進度和下一步" required></textarea><button>建立持久任務</button></form><div id="missions"></div></div></div>
-<div class="panel"><h2>進展歷史</h2><div id="events"></div></div></section><p id="alert" role="status"></p></main>
+<div class="panel"><h2>Android 活動同步（自願開啟）</h2><p>無需安裝 App 也可使用 GEP；如要自動統計其他 Android App 的使用時間，請安裝可選 Companion，授權 Usage Access。</p><div class="line"><input id="device-label" placeholder="例如 Pixel 8"><button type="button" id="pair-device">建立 Android 配對令牌</button></div><div id="device-secret" class="notice hidden"></div><div id="device-list"></div><div id="phone-usage"></div><button type="button" id="clear-usage" class="secondary">刪除我的手機使用紀錄</button></div><div class="panel"><h2>進展歷史</h2><div id="events"></div></div></section><p id="alert" role="status"></p></main>
 <script>
 const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -35,8 +35,28 @@ $("#goals").innerHTML=s.goals.map(g=>item(g.name,g.domain+" · "+g.horizon+(g.pr
 $("#projects").innerHTML=s.projects.map(p=>item(p.name,p.status,[p.status!=="active"?button("project-active",p.id,"開始"):"",p.status==="active"?button("project-paused",p.id,"暫停"):"",button("project-shipped",p.id,"交付驗收")].join(""))).join("");
 $("#tasks").innerHTML=s.tasks.map(t=>item(t.title,t.state+(t.evidence_uri?" · "+t.evidence_uri:""),t.state==="pending"?button("evidence",t.id,"提交證據"):t.state==="awaiting_review"?button("accept",t.id,"驗收"):"")).join("");
 $("#missions").innerHTML=s.missions.map(m=>item(m.instruction,m.state+(m.progress?" · "+m.progress:""),[m.state==="planned"?button("mission-approve",m.id,"審批"):"",m.state==="approved"?button("mission-pause",m.id,"暫停"):"",m.state==="paused"?button("mission-resume",m.id,"恢復"):"",button("mission-note",m.id,"更新進度")].join(""))).join("");
+await refreshAndroid();
 $("#events").innerHTML=s.events.slice(0,30).map(e=>item(e.event,e.detail||e.mission_id)).join("");
 }catch(e){$("#auth").classList.remove("hidden");$("#app").classList.add("hidden");$("#logout").classList.add("hidden");if(e.message!=="Please sign in")alertText(e.message)}}
+async function refreshAndroid(){
+ const devices=await api("mobile/devices"), report=await api("mobile/usage");
+ $("#device-list").innerHTML=devices.map(d=>item(d.label,d.revoked?"已撤銷":"已連接",
+ d.revoked?"":button("revoke-device",d.id,"撤銷裝置權限"))).join("");
+ $("#phone-usage").innerHTML=report.apps.slice(0,12).map(x=>item(x.package,x.minutes+" 分鐘（授權範圍的近期紀錄）")).join("")||'<p class="muted">暫無手機活動紀錄</p>';
+}
+$("#pair-device").onclick=async()=>{
+ try{
+ const label=$("#device-label").value.trim();if(!label)throw Error("請輸入裝置名稱");
+ const paired=await api("mobile/devices","POST",{label});
+ $("#device-secret").classList.remove("hidden");
+ $("#device-secret").textContent="請立即複製並安全貼到 Android Companion（只顯示一次）： "+paired.token;
+ await refreshAndroid()
+ }catch(e){alertText(e.message)}
+};
+$("#clear-usage").onclick=async()=>{
+ if(!confirm("確定刪除你在 GEP 雲端保存的所有 Android 使用紀錄？"))return;
+ try{await api("mobile/usage","DELETE");await refreshAndroid()}catch(e){alertText(e.message)}
+};
 function hook(form,path,shape){$(form).addEventListener("submit",async e=>{e.preventDefault();try{const fd=new FormData(e.target);await api(path,"POST",shape(fd));e.target.reset();alertText("");await refresh()}catch(err){alertText(err.message)}})}
 hook("#goalform","goals",f=>({name:f.get("name"),domain:f.get("domain")}));
 hook("#projectform","projects",f=>({name:f.get("name"),goal_id:f.get("goal_id")}));
@@ -46,7 +66,8 @@ $("#authform").onsubmit=async e=>{e.preventDefault();const f=new FormData(e.targ
 $("#register").onclick=async()=>{const f=new FormData($("#authform"));try{await api("register","POST",{email:f.get("email"),password:f.get("password")});alertText("");await refresh()}catch(x){alertText(x.message)}};
 $("#logout").onclick=async()=>{await api("logout","POST");location.reload()};
 document.addEventListener("click",async e=>{const b=e.target.closest("button[data-action]");if(!b)return;const id=b.dataset.id,a=b.dataset.action;
-try{if(a.startsWith("project-"))await api("projects/"+id,"PATCH",{state:a.split("-")[1]});
+try{if(a==="revoke-device")await api("mobile/devices/"+id,"DELETE");
+else if(a.startsWith("project-"))await api("projects/"+id,"PATCH",{state:a.split("-")[1]});
 else if(a==="evidence"){const uri=prompt("請填寫可以驗證的成果檔案網址或路徑");if(!uri)return;await api("tasks/"+id+"/evidence","POST",{uri})}
 else if(a==="accept"){if(!confirm("你已親自檢查並接受這項成果？"))return;await api("tasks/"+id+"/accept","POST")}
 else if(a==="mission-note"){const note=prompt("記錄進度／阻塞");if(note===null)return;await api("missions/"+id+"/note","POST",{note})}
