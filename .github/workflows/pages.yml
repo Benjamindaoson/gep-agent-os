@@ -1,0 +1,52 @@
+name: Deploy GEP product website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "site/**"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: false
+      - name: Verify site files and links
+        run: |
+          test -s site/index.html
+          test -s site/styles.css
+          test -s site/assets/gep-mark.svg
+          python - <<'PY'
+          from pathlib import Path
+          page=Path("site/index.html").read_text()
+          assert '<title>' in page
+          assert 'href="styles.css"' in page
+          assert "v0.1.0-alpha.1" in page
+          assert "尚无面向公众运行的托管 SaaS" in page
+          PY
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload static website
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./site
+      - name: Deploy GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
