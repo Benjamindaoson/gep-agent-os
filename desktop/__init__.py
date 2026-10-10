@@ -1,0 +1,1 @@
+"""GEP Windows Companion. Local optional collector; hosted GEP remains zero install."""
