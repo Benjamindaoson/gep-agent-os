@@ -14,6 +14,8 @@ from .runner import WorkflowWorker
 from .portfolio import review
 from .resources import recovery_plan
 from .workspace import create_snapshot,restore_snapshot
+from .life import LifePortfolio
+from .providers import github_repo,vercel_project,huggingface_dataset
 from .integrations import OpenClaw,OpenHands,IntegrationError
 
 
@@ -57,6 +59,20 @@ def build_parser() -> argparse.ArgumentParser:
     cp = subs.add_parser("checkpoint")
     cp.add_argument("project_id")
     subs.add_parser("overview")
+    life=subs.add_parser("life-plan")
+    life.add_argument("goal_id")
+    life.add_argument("--priority",type=int,default=3)
+    life.add_argument("--weekly-hours",type=float,default=0)
+    life.add_argument("--protected",action="store_true")
+    life.add_argument("--target",default="")
+    subs.add_parser("life-report")
+    linked=subs.add_parser("goal-link")
+    linked.add_argument("source")
+    linked.add_argument("target")
+    linked.add_argument("--relation",choices=["supports","competes","depends_on"],required=True)
+    health=subs.add_parser("provider-check")
+    health.add_argument("--provider",choices=["github","vercel","huggingface"],required=True)
+    health.add_argument("--resource",required=True)
     backup=subs.add_parser("workspace-backup")
     backup.add_argument("--repo",required=True)
     backup.add_argument("--archive",required=True)
@@ -157,6 +173,24 @@ def main(argv: list[str] | None = None) -> None:
                 result["git_workspace"] = inspect_repo(args.repo)
         elif command == "checkpoint":
             result = {"snapshot_id": store.checkpoint(args.project_id)}
+        elif command == "life-plan":
+            LifePortfolio(args.db).plan(args.goal_id,args.priority,args.protected,
+                                         args.target,args.weekly_hours)
+            result={"saved":True}
+        elif command == "life-report":
+            result=LifePortfolio(args.db).report()
+        elif command == "goal-link":
+            LifePortfolio(args.db).link(args.source,args.target,args.relation)
+            result={"saved":True}
+        elif command == "provider-check":
+            if args.provider=="github":
+                parts=args.resource.split("/")
+                if len(parts)!=2:raise ValueError("GitHub resource must be owner/repo")
+                result=github_repo(*parts)
+            elif args.provider=="vercel":
+                result=vercel_project(args.resource)
+            else:
+                result=huggingface_dataset(args.resource)
         elif command == "workspace-backup":
             result=create_snapshot(args.repo,args.archive)
         elif command == "workspace-restore":

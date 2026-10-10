@@ -5,10 +5,11 @@ from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from .store import GEPStore
 from .ledger import RunLedger
 from .engine import WorkflowEngine
+from .life import LifePortfolio
 
 def dashboard_data(db: str)->dict:
     store=GEPStore(db);store.initialize()
-    return {"overview":store.overview(),"runs":RunLedger(db).list(),"workflow":WorkflowEngine(db).snapshot()}
+    return {"overview":store.overview(),"runs":RunLedger(db).list(),"workflow":WorkflowEngine(db).snapshot(),"life":LifePortfolio(db).report()}
 
 def render(data:dict)->str:
     goals=data["overview"]["goals"];projects=data["overview"]["projects"];runs=data["runs"]
@@ -18,6 +19,8 @@ def render(data:dict)->str:
         '</span><small>'+escape(p["id"])+'</small></article>' for p in projects
     ) or '<p class="empty">No projects yet. Create one with the GEP CLI.</p>'
     work=data.get("workflow",{})
+    life=data.get("life",{})
+    budget_msg="Planned: "+str(life.get("weekly_planned_hours",0))+" / "+str(life.get("weekly_available_hours",40))+" discretionary hours"
     stage_items="".join("<article><strong>"+escape(w["name"])+"</strong><span>"+escape(w["state"])+"</span></article>" for w in work.get("workflows",[]))
     stage_items+="".join("<article>"+escape(s["title"])+" · "+escape(s["state"])+"</article>" for s in work.get("steps",[]))
     goal_items="".join('<li>'+escape(g["name"])+' · '+escape(g["domain"])+'</li>' for g in goals)
@@ -40,7 +43,7 @@ footer{margin-top:30px;color:#90a2ba;font-size:12px}</style></head>
 <body><header><span class="pill">LOCAL / READ ONLY</span><h1>GEP Mission Control</h1>
 <p>Goals first. Agents execute. Evidence decides what is complete.</p></header>
 <section><h2>Life & learning goals</h2><ul>"""+goal_items+"""</ul></section>
-<section><h2>Projects</h2>"""+cards+"""</section>
+<section><h2>Personal time allocation</h2><p>"""+escape(budget_msg)+"""</p></section><section><h2>Projects</h2>"""+cards+"""</section>
 <section><h2>Workflow milestones</h2>"""+stage_items+"""</section><section><h2>Execution ledger</h2><table>
 <thead><tr><th>Executor</th><th>Status</th><th>Task ID</th><th>Updated</th></tr></thead>
 <tbody>"""+run_rows+"""</tbody></table></section>
