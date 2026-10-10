@@ -10,6 +10,7 @@ GEP is a **goal-aligned personal orchestration layer**. It helps decide whether 
 - Explicit **go/no-go project decisions** and a configurable work-in-progress limit.
 - No task can be marked verified without a recorded, verified evidence reference.
 - Resource registry and reproducible JSON handoff for resuming a project in a new session/device.
+- Optional **read-only Git workspace inspection**: commit, branch, dirty/untracked paths, and a warning that uncommitted code still needs backup.
 - Optional **read-only ActivityWatch adapter** for local, privacy-reduced activity summaries.
 - Pin-based upstream Git submodules (not copied/merged code).
 - Unit tests and CI.
@@ -27,7 +28,8 @@ gep --db ./gep.db project-start PROJECT_ID
 gep --db ./gep.db task-add PROJECT_ID --name "Baseline evaluation"
 gep --db ./gep.db evidence-add TASK_ID --uri "artifacts/baseline.json" --verified
 gep --db ./gep.db task-verify TASK_ID
-gep --db ./gep.db handoff PROJECT_ID
+gep --db ./gep.db handoff PROJECT_ID --repo /path/to/local/git-checkout
+gep --db ./gep.db repo-inspect /path/to/local/git-checkout
 gep --db ./gep.db overview
 python -m unittest discover -s tests -v
 ```
