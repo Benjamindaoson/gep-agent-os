@@ -161,3 +161,6 @@ def mission_note(id:str,data:Review,user:User=Depends(me),db:Session=Depends(db_
 # Import after app construction to avoid cross-module import recursion.
 from . import mobile as mobile_routes
 app.include_router(mobile_routes.router)
+
+from . import desktop as desktop_routes
+app.include_router(desktop_routes.router)
