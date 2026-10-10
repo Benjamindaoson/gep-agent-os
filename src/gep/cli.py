@@ -13,6 +13,7 @@ from .engine import WorkflowEngine
 from .runner import WorkflowWorker
 from .portfolio import review
 from .resources import recovery_plan
+from .workspace import create_snapshot,restore_snapshot
 from .integrations import OpenClaw,OpenHands,IntegrationError
 
 
@@ -56,6 +57,13 @@ def build_parser() -> argparse.ArgumentParser:
     cp = subs.add_parser("checkpoint")
     cp.add_argument("project_id")
     subs.add_parser("overview")
+    backup=subs.add_parser("workspace-backup")
+    backup.add_argument("--repo",required=True)
+    backup.add_argument("--archive",required=True)
+    restore=subs.add_parser("workspace-restore")
+    restore.add_argument("--archive",required=True)
+    restore.add_argument("--destination",required=True)
+    restore.add_argument("--approve",action="store_true")
     createwf=subs.add_parser("workflow-add")
     createwf.add_argument("project_id")
     createwf.add_argument("--name",required=True)
@@ -149,6 +157,10 @@ def main(argv: list[str] | None = None) -> None:
                 result["git_workspace"] = inspect_repo(args.repo)
         elif command == "checkpoint":
             result = {"snapshot_id": store.checkpoint(args.project_id)}
+        elif command == "workspace-backup":
+            result=create_snapshot(args.repo,args.archive)
+        elif command == "workspace-restore":
+            result=restore_snapshot(args.archive,args.destination,args.approve)
         elif command == "workflow-add":
             result={"workflow_id":WorkflowEngine(args.db).create(args.project_id,args.name)}
         elif command == "workflow-step":
