@@ -15,7 +15,7 @@ def _git(path: str, *args: str) -> str:
     )
     if result.returncode:
         raise ValueError("Cannot inspect Git workspace: " + (result.stderr.strip() or "git failed"))
-    return result.stdout.rstrip("\\r\\n")
+    return result.stdout.rstrip("\r\n")
 
 
 def inspect_repo(path: str | Path) -> dict:
