@@ -1,83 +1,89 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
+<html lang="zh-CN"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#101827">
-<meta name="description" content="GEP Agent OS：把目标、工作、学习、生活和 AI 执行整合成一个持续推进的系统。不是做更多，而是做成真正重要的事。">
-<meta property="og:type" content="website"><meta property="og:title" content="GEP Agent OS — 把重要的事，真正做成。">
-<meta property="og:description" content="围绕长期目标，统筹任务、精力、AI 工具和成果的个人执行系统。">
-<title>GEP Agent OS — 把重要的事，真正做成。</title>
+<meta name="theme-color" content="#080e1c">
+<meta name="description" content="MOVA — 为你而行动的随身 AI Agent。理解长期目标，接手任务，协调工具，跟进结果。从想做，到做成。">
+<meta property="og:title" content="MOVA — 你的随身 AI Agent，不只回答，更会行动。">
+<meta property="og:description" content="从任务到目标，一个持续记住上下文、协调工作流、跟进成果的个人 AI Agent。">
+<meta property="og:type" content="website">
+<title>MOVA | 你的随身 AI Agent · 让目标真正发生</title>
 <link rel="icon" href="assets/gep-mark.svg" type="image/svg+xml">
 <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-<div class="ambient" aria-hidden="true"></div>
-<header class="site-header"><div class="shell nav">
-<a class="brand" href="#top" aria-label="GEP Agent OS 首页"><img src="assets/gep-mark.svg" width="31" height="31" alt=""><span>GEP<span class="brand-light">Agent OS</span></span></a>
-<nav class="desktop-nav" aria-label="主导航"><a href="#problem">为什么 GEP</a><a href="#experience">工作方式</a><a href="#features">能力</a><a href="#open-source">开源与架构</a></nav>
-<div class="nav-actions"><a href="https://github.com/Benjamindaoson/gep-agent-os" target="_blank" rel="noopener" class="nav-github">GitHub <span aria-hidden="true">↗</span></a><a class="btn btn-small btn-primary" href="#download">获取 Alpha <span>↗</span></a></div>
+</head><body>
+<div class="aura" aria-hidden="true"></div>
+<header class="topbar"><div class="container nav">
+<a href="#top" class="brand" aria-label="MOVA 首页"><span class="brand-mark"><span>✳</span></span><span>MOVA</span><span class="brand-suffix">AI AGENT</span></a>
+<nav aria-label="主导航" class="navlinks"><a href="#product">产品体验</a><a href="#agents">Agent 能力</a><a href="#difference">为什么 MOVA</a><a href="#build">开发进度</a></nav>
+<div class="navright"><a class="text-link" target="_blank" rel="noopener" href="https://github.com/Benjamindaoson/gep-agent-os">GitHub ↗</a><a class="pill-button small" href="#early-access">抢先体验 ↗</a></div>
 </div></header>
 <main id="top">
-<section class="hero shell">
-<div class="hero-copy"><div class="eyebrow"><span class="status-dot"></span> NOW BUILDING · OPEN DEVELOPMENT <span class="eyebrow-divider"></span> v0.1.0-alpha.1</div>
-<h1>你的目标，<br><em>不该只停在计划里。</em></h1>
-<p class="hero-lead">工作、学习、生活、项目，永远有做不完的事情。<br class="break-desktop">GEP 帮你把它们连起来——看清什么最重要，保持进度，让每一步都有交代。</p>
-<div class="hero-buttons"><a class="btn btn-primary" href="#experience">探索 GEP <span>→</span></a><a class="btn btn-outline" href="https://github.com/Benjamindaoson/gep-agent-os" target="_blank" rel="noopener">查看开源代码 <span>↗</span></a></div>
-<div class="hero-proof"><div class="avatar-stack"><span>G</span><span>E</span><span>P</span></div><div>围绕目标，而非只围绕待办。<small>Goal-aligned · Evidence-driven · Human-controlled</small></div></div>
+<section class="hero container">
+<div class="hero-copy">
+<div class="tagline"><i></i> MEET YOUR PERSONAL AI AGENT <span class="alpha-tag">EXPERIMENTAL ALPHA</span></div>
+<h1>不只是 AI 助手。<br><span>是替你行动的<br>专属 Agent。</span></h1>
+<p class="hero-desc">告诉它你想完成什么。它帮你理清目标、管理任务、协调工具、跟进进度。<strong>不需要每次从头解释，也不该每一步都由你亲自推动。</strong></p>
+<div class="hero-actions"><a class="pill-button" href="#product">看看 MOVA 如何工作 <span>→</span></a><a class="ghost-button" href="https://github.com/Benjamindaoson/gep-agent-os" target="_blank" rel="noopener">探索开源项目 <span>↗</span></a></div>
+<div class="hero-foot"><span><b>01</b> 一个理解你目标的 AI</span><span><b>02</b> 不止聊天，也能执行</span><span><b>03</b> 持续跟进，结果可查</span></div>
 </div>
-<div class="hero-visual" aria-label="GEP 产品概念工作台">
-<div class="halo"></div>
-<div class="mock-browser">
-<div class="mock-bar"><div class="traffic"><i></i><i></i><i></i></div><span class="mock-address"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg> gep / mission-control</span><span class="bar-icon">⌘</span></div>
-<div class="mock-app"><div class="mock-side"><div class="side-mark">G</div><div class="side-active">▦</div><div>◉</div><div>◷</div><div>▤</div><div class="side-bottom">⚙</div></div>
-<div class="mock-content"><div class="mini-top"><span>MONDAY / YOUR WEEK</span><span class="mini-date">● LIVE DEMO</span></div>
-<h3>One direction. Real progress.</h3><p class="mini-sub">让行动服务长期目标</p>
-<div class="goal-panel"><div class="goal-heading"><span class="goal-symbol">◎</span><div><small>当前战略重点</small><strong>走向具身智能算法工程师</strong></div><span class="goal-more">⋯</span></div><div class="goal-meter"><span></span></div><div class="goal-foot"><span>以已验收的成果为依据</span><span>2 / 4 milestones</span></div></div>
-<div class="mini-grid"><div class="stat"><small>ACTIVE PROJECTS</small><strong>02</strong><span>保持聚焦</span></div><div class="stat"><small>VERIFIED OUTPUTS</small><strong>06</strong><span>成果有证据</span></div></div>
-<div class="mock-section-title">NEXT MEANINGFUL STEPS <span>→</span></div>
-<div class="task-line"><span class="task-check done">✓</span><div><strong>完成基础评测</strong><small>VLA-Forge · 已附测试报告</small></div><span class="task-label">VERIFIED</span></div>
-<div class="task-line"><span class="task-check">◌</span><div><strong>整理失败案例并复盘</strong><small>VLA-Forge · 等待执行</small></div><span class="task-label neutral">NEXT</span></div>
-<div class="signal"><span>✧</span><div><strong>GEP Insight</strong><p>新项目会挤占本周的核心实验时间。先完成当前里程碑？</p></div></div>
+<div class="demo-shell">
+<div class="demo-halo"></div>
+<div class="demo-app" aria-label="MOVA Agent 产品概念演示，非在线运行的 Agent">
+<div class="demo-head"><div class="agent-avatar">✳</div><div><strong>MOVA</strong><small>Your personal AI agent</small></div><span class="online"><i></i> CONCEPT PREVIEW</span></div>
+<div class="demo-body">
+<div class="demo-time">TODAY · YOUR AI WORKSPACE</div>
+<div class="bubble-user">我想在 3 个月内成为 AI Agent 工程师，但事情太多，不知道从哪开始。</div>
+<div class="ai-turn"><div class="turn-avatar">✳</div><div class="turn-content"><span class="turn-name">MOVA <i>AGENT</i></span>
+<p>明白。我会把求职目标拆成可验证的阶段，并优先安排真正影响结果的任务。</p>
+<div class="agent-plan">
+<div class="plan-header"><span class="plan-icon">◎</span><div><b>成为 AI Agent 工程师</b><small>90-day mission · 示例数据</small></div><span class="plan-link">↗</span></div>
+<div class="progress-track"><span></span></div>
+<div class="plan-row"><span class="done">✓</span><div><b>建立岗位能力清单</b><small>目标与技能差距已整理</small></div><label>已验收</label></div>
+<div class="plan-row"><span class="working">↗</span><div><b>完成企业级 Agent 项目</b><small>任务拆解 · 评测 · 成果证据</small></div><label class="blue">进行中</label></div>
+<div class="plan-row"><span class="open">○</span><div><b>准备面试与申请</b><small>根据项目成果更新材料</small></div><label class="dim">待开始</label></div>
+</div>
+<p class="ai-question">你可以专注于关键决策。需要使用外部工具或执行敏感操作时，我会先征求授权。</p>
 </div></div>
 </div>
-<div class="floating-card float-top"><span>↗</span><div><strong>From tasks to outcomes</strong><small>Know what really moved forward</small></div></div>
-<div class="floating-card float-bottom"><span class="green-round">✓</span><div><strong>Evidence saved</strong><small>Progress you can actually verify</small></div></div>
+<div class="demo-compose"><span>告诉 MOVA 下一步想完成什么…</span><span class="send-circle">➤</span></div>
+</div>
+<div class="floating-note note-one"><span>✦</span><div><b>Agent, not just chat</b><small>Plan · Act · Check · Continue</small></div></div>
+<div class="floating-note note-two"><span>✓</span><div><b>Context preserved</b><small>Your goals stay in focus</small></div></div>
 </div>
 </section>
-<div class="shell"><div class="trust-line"><span>BUILT FOR THE WAY WE ACTUALLY LIVE AND WORK</span><span class="trust-separator"></span><span>GOALS</span><span>PROJECTS</span><span>LEARNING</span><span>LIFE</span><span>AI WORKFLOWS</span></div></div>
-
-<section id="problem" class="section shell"><div class="section-title"><span class="overline">01 / THE PROBLEM</span><h2>忙碌，不等于前进。</h2><p>传统工具各自管理一件事。真正影响结果的，却是这些事如何互相争夺你的时间和精力。</p></div>
-<div class="pain-grid"><article class="pain-card"><span class="pain-icon">01</span><h3>每天做了很多，<br>重要的事却没完成。</h3><p>待办清单变短了，长期目标仍然停在原地。</p></article><article class="pain-card"><span class="pain-icon">02</span><h3>项目开了很多，<br>每一个都做到一半。</h3><p>工具、分支、云环境、历史上下文越堆越乱。</p></article><article class="pain-card"><span class="pain-icon">03</span><h3>AI 很会回答，<br>但仍需要你盯着。</h3><p>每次切换设备和会话，都像重新交代一个项目。</p></article></div>
-<div class="problem-statement"><span class="quote-mark">“</span><p>我们不缺工具，不缺计划，<br><strong>缺的是一个能持续把生活和行动拉回正确方向的系统。</strong></p><span class="quote-foot">THE GEP THESIS</span></div>
-</section>
-
-<section id="experience" class="section band"><div class="shell"><div class="section-title"><span class="overline">02 / THE EXPERIENCE</span><h2>从想法到成果，<br>始终是一条连续的路。</h2><p>不是再多一个 App，而是把原本分散的工作流组合成一个可持续的行动闭环。</p></div>
-<div class="steps"><div class="step"><div class="step-count">01</div><div><h3>先问：值得做吗？</h3><p>新想法、新项目、新机会进来时，先看它是否符合你的长期方向与当下资源。</p></div><span class="step-symbol">◎</span></div>
-<div class="step"><div class="step-count">02</div><div><h3>把目标变成看得见的路线</h3><p>关联工作、学习、生活责任，拆成有定义、有证据、有完成标准的阶段。</p></div><span class="step-symbol">⇢</span></div>
-<div class="step"><div class="step-count">03</div><div><h3>让合适的工具做合适的事</h3><p>保留现有 GitHub、AI Agent、数据和云资源；GEP 的方向是统一协调，而非替换。</p></div><span class="step-symbol">✳</span></div>
-<div class="step"><div class="step-count">04</div><div><h3>中断能继续，成果可验收</h3><p>以持久化状态和证据为基础恢复工作；用真实交付，而非 AI 的“已完成”，衡量进展。</p></div><span class="step-symbol">✓</span></div></div></div></section>
-
-<section id="features" class="section shell"><div class="section-title"><span class="overline">03 / WHAT MATTERS</span><h2>你需要的不是更多功能。<br><span class="muted-h2">而是更少的管理负担。</span></h2></div>
+<div class="container"><div class="signal-strip"><span>ONE AGENT. YOUR ENTIRE LIFE IN CONTEXT.</span><div>CAREER <b>·</b> PROJECTS <b>·</b> LEARNING <b>·</b> LIFE <b>·</b> EXECUTION</div></div></div>
+<section class="section section-contrast" id="product"><div class="container">
+<div class="section-heading center"><span class="kicker">THE NEW PERSONAL AI</span><h2>你需要的不是一个<br>更聪明的聊天框。</h2><p>而是一个认识你、记得你正在做什么，并且能把事情往前推进的 Agent。</p></div>
+<div class="shift-grid">
+<div class="shift-card old"><span>BEFORE MOVA</span><h3>你在管理工具。<br>工具只等你下命令。</h3><div class="old-list"><div>✕　重复解释项目背景</div><div>✕　自己安排每一步任务</div><div>✕　到处切换应用和 Agent</div><div>✕　自己检查进度与结果</div></div></div>
+<div class="shift-arrow">→</div>
+<div class="shift-card new"><span>WITH MOVA · PRODUCT VISION</span><h3>一个专属 Agent。<br>持续帮你推进重要的事。</h3><div class="new-list"><div>✓　围绕个人目标保存上下文</div><div>✓　规划、执行、验证和继续</div><div>✓　协调已经在用的 AI 工具</div><div>✓　在偏离方向时协助你调整</div></div></div>
+</div>
+</div></section>
+<section class="section" id="agents"><div class="container">
+<div class="section-heading"><span class="kicker">MORE THAN ASSISTANCE</span><h2>一个真正为你做事的<br><span>Personal AI Agent。</span></h2><p>不是把待办换个界面，而是从目标出发，让 Agent 在得到授权后接手它能完成的工作。</p></div>
 <div class="feature-grid">
-<article class="feature feature-wide"><div class="feature-tag">DIRECTION</div><h3>所有目标，放在同一张地图上。</h3><p>职业、学习、健康、生活和探索，都可以拥有独立价值。识别协同与冲突，而不是把人生压缩为单一效率分数。</p><div class="goal-map" aria-hidden="true"><div class="map-center">YOUR<br>GOALS</div><div class="map-node n1">CAREER</div><div class="map-node n2">LEARNING</div><div class="map-node n3">LIFE</div><div class="map-node n4">HEALTH</div><div class="map-line m1"></div><div class="map-line m2"></div><div class="map-line m3"></div><div class="map-line m4"></div></div></article>
-<article class="feature"><div class="feature-tag">MOMENTUM</div><h3>少开新坑。<br>把重要项目做完。</h3><p>限制并行项目、明确下一步、设置验收门槛。不要让局部忙碌掩盖整体停滞。</p><div class="stack"><div class="stack-row"><span class="stack-dot"></span><span>Baseline verified</span><span>✓</span></div><div class="stack-row"><span class="stack-dot pending"></span><span>Review failures</span><span>→</span></div><div class="stack-row dim"><span class="stack-dot empty"></span><span>Ship demo</span><span>◌</span></div></div></article>
-<article class="feature"><div class="feature-tag">AWARENESS</div><h3>能自动记录的，<br>不再靠毅力。</h3><p>Windows 和 Android 可选 Companion 帮助采集经过授权的活动信号。你保留开启、暂停与删除的控制权。</p><div class="device-cards"><div><span>▣</span><strong>Windows</strong><small>ActivityWatch + Git</small></div><div><span>▯</span><strong>Android</strong><small>Usage stats</small></div></div></article>
-<article class="feature feature-wide execution-feature"><div class="feature-tag">ORCHESTRATION</div><h3>你的工具，不需要再各自为战。</h3><p>GEP 的方向是连接现有的执行工具，保持任务上下文、资源位置和验收结果一致。Agent 是执行者，目标始终由你决定。</p><div class="tool-track"><span>GEP CORE</span><span>↔</span><span>OpenClaw</span><span>↔</span><span>OpenHands</span><span>↔</span><span>GitHub</span><span>↔</span><span>Cloud</span></div></article>
+<article class="feature-card"><div class="feature-symbol">◎</div><span>01 / UNDERSTAND</span><h3>理解你的长期目标</h3><p>职业、项目、学习、生活不再是互不关联的清单。新的任务先看价值和优先级，而不是一股脑全接。</p><div class="feature-bottom">Goals & personal context <b>↗</b></div></article>
+<article class="feature-card"><div class="feature-symbol">↗</div><span>02 / EXECUTE</span><h3>把任务交给 Agent 做</h3><p>连接现有执行工具，拆解步骤，保留执行状态，把能交给 AI 的工作交出去，重要操作由你批准。</p><div class="feature-bottom">Agent orchestration <b>↗</b></div></article>
+<article class="feature-card"><div class="feature-symbol">◷</div><span>03 / CONTINUE</span><h3>你离开，进度不断线</h3><p>电脑、手机与云端围绕同一任务状态协同。中断后不需要重新从零整理整个上下文。</p><div class="feature-bottom">Continuity & recovery <b>↗</b></div></article>
+<article class="feature-card"><div class="feature-symbol">✳</div><span>04 / ADAPT</span><h3>知道什么时候该调整</h3><p>可选设备活动数据、任务证据和真实进展共同提供线索。忙碌并不自动代表接近目标。</p><div class="feature-bottom">Focus & feedback <b>↗</b></div></article>
+</div>
 </div></section>
-
-<section class="section band status-band" id="status"><div class="shell"><div class="split-heading"><div><span class="overline">04 / BUILDING IN PUBLIC</span><h2>我们正在认真地<br>把它做出来。</h2></div><p>我们选择开放开发进度。不是演示里出现了，就代表产品已实现；每一项能力都应有可检查的证据。</p></div>
-<div class="status-grid">
-<div class="status-card"><span class="status-mark done">✓</span><strong>已具备的基础能力</strong><p>目标/项目管理、证据记录、基础执行适配器、Windows 与 Android 客户端构建、云端 Web 应用代码。</p></div>
-<div class="status-card"><span class="status-mark current">↗</span><strong>正在完成真实联调</strong><p>托管部署、账号配对、设备数据同步、任务执行和完整端到端验收。</p></div>
-<div class="status-card"><span class="status-mark later">◇</span><strong>长期产品方向</strong><p>长期可靠自主执行、跨设备接力、深度目标纠偏以及低维护负担的个人智能系统。</p></div>
-</div><p class="status-caption">当前提供实验性 Alpha 安装包和开源代码。GEP 尚无面向公众运行的托管 SaaS；客户端需要配置后端。官网中的工作台为概念示意，不代表已上线的真实数据。</p>
+<section class="section showcase-section" id="experience"><div class="container">
+<div class="showcase-top"><div><span class="kicker">HOW IT FEELS</span><h2>像有一个可靠的 AI 搭档，<br>随时和你并肩。</h2></div><p>你说出方向，MOVA 协助形成行动路线；接下来你负责判断，Agent 负责承担可授权、可验证的步骤。</p></div>
+<div class="scenarios"><article><span>CAREER AGENT</span><h3>“我想成为 AI Agent 工程师。”</h3><p>整理能力差距、制定作品集路线、推动项目里程碑、沉淀可用于求职的成果。</p><b>从职业目标到求职交付物 →</b></article>
+<article><span>PROJECT AGENT</span><h3>“这个项目别再做到一半。”</h3><p>接住未完成的工作，保存状态，协调代码与云端资源，遇到阻塞明确告诉你下一步。</p><b>从半途而废到可持续推进 →</b></article>
+<article><span>EVERYDAY AGENT</span><h3>“帮我安排好这周重要的事。”</h3><p>一起协调工作、学习和生活责任，减少无意义的切换，而不是把每个小时都塞满。</p><b>从任务过载到聚焦选择 →</b></article></div>
 </div></section>
-
-<section id="open-source" class="section shell"><div class="section-title"><span class="overline">05 / OPEN BY DESIGN</span><h2>把复杂性留给系统。<br>把控制权还给你。</h2><p>我们不是另一个 Coding Agent。GEP 以现有成熟工具为执行层，专注人与目标、任务和成果之间的连接。</p></div>
-<div class="principles"><div><span>01</span><strong>Human-controlled</strong><p>重要决策与敏感操作，始终由你批准。</p></div><div><span>02</span><strong>Evidence-driven</strong><p>不能只凭模型回复，就宣布事情已完成。</p></div><div><span>03</span><strong>Portable by design</strong><p>任务状态和资产尽可能保持可恢复、可迁移。</p></div><div><span>04</span><strong>Privacy-first observation</strong><p>采集由你选择；不用监控也可以使用基础产品。</p></div></div></section>
-
-<section id="download" class="section cta-section"><div class="shell cta-wrap"><div><span class="overline">GET INVOLVED</span><h2>开始，让重要的事情<br><em>真正向前走。</em></h2><p>目前开放源码与实验性客户端预发布版本。探索项目、反馈问题，或者和我们一起构建下一代个人智能系统。</p><div class="cta-buttons"><a class="btn btn-primary" href="https://github.com/Benjamindaoson/gep-agent-os/releases/tag/v0.1.0-alpha.1" target="_blank" rel="noopener">下载 Alpha <span>↗</span></a><a class="btn btn-outline" href="https://github.com/Benjamindaoson/gep-agent-os/issues" target="_blank" rel="noopener">提出建议 <span>→</span></a></div></div><div class="download-panel"><span class="panel-header">RELEASE / v0.1.0-alpha.1</span><a href="https://github.com/Benjamindaoson/gep-agent-os/releases/download/v0.1.0-alpha.1/GEP-Companion-Windows-x64.exe"><span>▣</span><div><strong>Windows Companion</strong><small>Portable .exe · unsigned alpha</small></div><b>↗</b></a><a href="https://github.com/Benjamindaoson/gep-agent-os/releases/download/v0.1.0-alpha.1/GEP-Companion-Android-debug.apk"><span>▯</span><div><strong>Android Companion</strong><small>Debug .apk · experimental</small></div><b>↗</b></a><a href="https://github.com/Benjamindaoson/gep-agent-os"><span>⌘</span><div><strong>Source on GitHub</strong><small>Review & contribute</small></div><b>↗</b></a></div></div></section>
+<section class="section operating-section" id="difference"><div class="container"><div class="section-heading"><span class="kicker">THE DIFFERENCE</span><h2>AI 不该只告诉你<br>该怎么做。<span>它应该帮你去做。</span></h2><p>普通 AI 关注这一次提问。MOVA 的产品方向是持续围绕你真正想实现的目标工作。</p></div>
+<div class="operating-diagram"><div class="op-core"><div class="op-avatar">✳</div><strong>MOVA</strong><small>PERSONAL AGENT</small></div><div class="op-flow"><div><small>01 · CONTEXT</small><b>记住方向</b><p>目标、约束、历史任务</p></div><span>→</span><div><small>02 · EXECUTION</small><b>协调执行</b><p>OpenClaw · OpenHands · 工具</p></div><span>→</span><div><small>03 · RESULTS</small><b>验收成果</b><p>状态、证据、下一步</p></div></div></div>
+<div class="operating-foot"><div><b>零部署的产品体验</b><span>用户未来通过网页和消息渠道使用；平台托管执行复杂性。</span></div><div><b>可选的设备感知</b><span>Windows / Android Companion 自愿连接，不是使用门槛。</span></div><div><b>你始终拥有控制权</b><span>敏感操作先审批，活动采集可关闭，结果必须有证据。</span></div></div>
+</div></section>
+<section class="section build-section" id="build"><div class="container"><div class="section-heading"><span class="kicker">BUILDING IN PUBLIC</span><h2>产品愿景很大。<br>我们把实现进度公开。</h2><p>官网展示的是产品方向与概念界面，并非已经完成的在线自治 Agent。我们不会把模拟工作流写成已经交付的用户成果。</p></div>
+<div class="build-grid"><div><span class="build-dot green"></span><b>已实现的工程基础</b><p>目标/任务 API、持久化状态、桌面与 Android 可选客户端、部分 Agent 适配器及构建流水线。</p></div><div><span class="build-dot amber"></span><b>Alpha 阶段 / 真实联调中</b><p>云端服务部署、设备配对、外部工具真实执行、跨设备端到端可靠性验收。</p></div><div><span class="build-dot purple"></span><b>正在追求的产品体验</b><p>开箱即用的托管个人 Agent、长期记忆、主动协助与可验证的自主任务完成。</p></div></div>
+<div class="build-note">当前没有对公众开放的托管 MOVA 服务。本页中聊天内容、完成状态与 AI 行动展示均为<strong>概念示例</strong>，用于说明研发方向。GEP 是现有开源工程仓库及内部技术代号。</div>
+</div></section>
+<section class="section final-cta" id="early-access"><div class="container cta-layout"><div><span class="kicker">MEET YOUR NEXT AI PARTNER</span><h2>你的下一个搭档，<br><span>应该是一个 Agent。</span></h2><p>让 AI 不止能聊，更能理解你的方向，并为重要的事持续行动。从这里开始关注 MOVA 的开发。</p><div class="cta-actions"><a class="pill-button" href="https://github.com/Benjamindaoson/gep-agent-os" target="_blank" rel="noopener">关注 GitHub 项目 ↗</a><a class="ghost-button" href="https://github.com/Benjamindaoson/gep-agent-os/issues" target="_blank" rel="noopener">提出产品建议 →</a></div></div>
+<div class="release-box"><small>AVAILABLE NOW · EXPERIMENTAL BUILDS</small><h3>体验早期 Companion</h3><a href="https://github.com/Benjamindaoson/gep-agent-os/releases/download/v0.1.0-alpha.1/GEP-Companion-Windows-x64.exe">Windows Companion <span>↗</span></a><a href="https://github.com/Benjamindaoson/gep-agent-os/releases/download/v0.1.0-alpha.1/GEP-Companion-Android-debug.apk">Android Companion <span>↗</span></a><p>尚非成熟消费级 App。需要自行部署 GEP 后端，Windows 活动观察还需 ActivityWatch。</p></div></div></section>
 </main>
-<footer class="site-footer"><div class="shell footer-inner"><a class="brand" href="#top"><img src="assets/gep-mark.svg" width="27" height="27" alt=""><span>GEP<span class="brand-light">Agent OS</span></span></a><span>Start less. Finish what matters.</span><div><a href="https://github.com/Benjamindaoson/gep-agent-os">GitHub</a><a href="https://github.com/Benjamindaoson/gep-agent-os/releases">Releases</a><a href="https://github.com/Benjamindaoson/gep-agent-os/issues">Feedback</a></div><small>© <span id="year">2026</span> GEP Agent OS. Experimental software.</small></div></footer>
-<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+<footer><div class="container footer"><div class="brand"><span class="brand-mark"><span>✳</span></span><span>MOVA</span><span class="brand-suffix">AI AGENT</span></div><span>AI that stays with your goals.</span><div><a href="https://github.com/Benjamindaoson/gep-agent-os">GitHub</a><a href="https://github.com/Benjamindaoson/gep-agent-os/releases">Releases</a><a href="#build">Roadmap</a></div></div><div class="container footer-note">MOVA 是正在评估的候选产品名称，商标及域名尚未完成法律核验。开源工程仓库仍为 GEP Agent OS。 © 2026</div></footer>
 </body></html>

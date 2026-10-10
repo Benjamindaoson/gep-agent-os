@@ -2,17 +2,17 @@
 
 <img src="site/assets/gep-mark.svg" alt="GEP logo" width="82" />
 
-# GEP Agent OS
+# MOVA — Personal AI Agent
 
-### 把重要的事，真正做成。
-**Your goals. An AI that follows through.**
+### 不只是 AI 助手。是替你行动的专属 Agent。
+**Your personal AI agent. From intention to action.**
 
-围绕长期目标，统筹工作、学习、生活、项目与 AI 工作流。  
+理解长期目标、管理任务、协调现有工具，让你从反复下指令转向与随身 AI Agent 并肩完成工作。  
 不是再做一个 Coding Agent，而是让已有工具、行动和成果朝同一个方向前进。
 
 [**产品官网**](https://benjamindaoson.github.io/gep-agent-os/) · [**获取 Alpha**](https://github.com/Benjamindaoson/gep-agent-os/releases/tag/v0.1.0-alpha.1) · [**功能与开发状态**](#-目前实现状态) · [**反馈与建议**](https://github.com/Benjamindaoson/gep-agent-os/issues)
 
-![Status](https://img.shields.io/badge/status-experimental_alpha-84b8d6?style=flat-square)
+**MOVA 为候选产品名**，工程仓库 GEP、API、客户端文件名暂时不变；官网展示为概念体验，尚未正式提供自主执行 SaaS。\n\n![Status](https://img.shields.io/badge/status-experimental_alpha-84b8d6?style=flat-square)
 ![Windows](https://img.shields.io/badge/Windows-companion-3f8e85?style=flat-square)
 ![Android](https://img.shields.io/badge/Android-companion-3f8e85?style=flat-square)
 ![GitHub Pages](https://img.shields.io/badge/site-GitHub_Pages-546781?style=flat-square)
