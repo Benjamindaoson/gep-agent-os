@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="zh-Hant"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GEP — Personal AI Mission Control</title><style>
+:root{font-family:Inter,system-ui,-apple-system,sans-serif;color-scheme:dark;background:#0b101b;color:#eef4fe}
+*{box-sizing:border-box}body{margin:0}header{display:flex;justify-content:space-between;align-items:center;padding:20px max(22px,calc((100vw - 1080px)/2));border-bottom:1px solid #263248}
+h1{font-size:28px;margin:8px 0}h2{font-size:17px;margin:0 0 14px}p,.muted,small{color:#a7b7d1}main{max-width:1080px;padding:28px 20px;margin:auto}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.panel{background:#161f30;border:1px solid #2b3850;border-radius:16px;padding:20px;margin-bottom:18px}
+input,select,button,textarea{font:inherit;border-radius:9px;padding:11px 13px}input,select,textarea{background:#10192a;color:white;border:1px solid #40506b;min-width:0;width:100%}button{cursor:pointer;color:white;background:#3467c7;border:0}button.secondary{background:#2d3b54}button:disabled{opacity:.5;cursor:default}.line{display:flex;gap:9px;margin:10px 0;align-items:center}.line>*{flex:1}.item{border-top:1px solid #304057;padding:12px 0}.item strong{display:block;margin-bottom:4px} .tags{display:flex;flex-wrap:wrap;gap:6px;margin:5px 0}.tag{font-size:12px;color:#c3d3ef;background:#253a58;border-radius:18px;padding:4px 9px}.actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.actions button{font-size:12px;padding:7px 9px}.hidden{display:none!important}.notice{background:#18304b;border-radius:12px;padding:12px;margin:16px 0;color:#bed7ff}#alert{min-height:20px;color:#ffb4b4}
+@media(max-width:720px){.grid{grid-template-columns:1fr}header{padding:14px 18px}h1{font-size:24px}.line{flex-wrap:wrap}.line>button{flex:0 0 auto}}
+</style></head><body>
+<header><b>◉ GEP <small>Life Mission OS</small></b><div id="identity"><span id="who"></span> <button class="secondary hidden" id="logout">登出</button></div></header>
+<main><section id="auth" class="panel"><h1>你的目標，不再只靠自己堅持。</h1><p>不用安裝軟件。登入後，從任何電腦、平板或手機繼續同一套目標與任務。</p>
+<form id="authform"><div class="line"><input name="email" type="email" placeholder="電郵" required autocomplete="email"><input name="password" type="password" placeholder="密碼（至少12字元）" minlength="12" required autocomplete="current-password"></div>
+<div class="line"><button type="submit" value="login">登入</button><button type="button" id="register" class="secondary">建立帳號</button></div></form></section>
+<section id="app" class="hidden"><h1>你的 Mission Control</h1><p>管理人生方向、學習、生活與專案。階段成果必須有證據，AI 回報不等於已驗收。</p>
+<div class="notice">目前是零安裝雲端 Web MVP：跨設備共享資料已具備；真正背景 Agent 需要另行配置安全執行節點，尚不會自動啟動。</div>
+<div class="grid"><div class="panel"><h2>人生目標</h2><form id="goalform"><div class="line"><input name="name" placeholder="例如：三個月內進入具身智能行業" required><select name="domain"><option value="career">職業</option><option value="learning">學習</option><option value="life">生活</option><option value="health">健康</option><option value="finance">財務</option><option value="exploration">探索</option></select></div><button>建立目標</button></form><div id="goals"></div></div>
+<div class="panel"><h2>專案組合</h2><form id="projectform"><input name="name" placeholder="專案名稱" required><div class="line"><select name="goal_id" class="goal-options"></select><button>建立</button></div></form><div id="projects"></div></div>
+<div class="panel"><h2>真正的成果</h2><form id="taskform"><input name="title" placeholder="里程碑／可驗收任務" required><div class="line"><select name="project_id" id="project-options"></select><button>新增</button></div></form><div id="tasks"></div></div>
+<div class="panel"><h2>長期任務</h2><form id="missionform"><select name="goal_id" class="goal-options"></select><textarea name="instruction" rows="3" placeholder="例如：每週整理項目進度和下一步" required></textarea><button>建立持久任務</button></form><div id="missions"></div></div></div>
+<div class="panel"><h2>進展歷史</h2><div id="events"></div></div></section><p id="alert" role="status"></p></main>
+<script>
+const $=s=>document.querySelector(s), $$=s=>Array.from(document.querySelectorAll(s));
+const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+async function api(path,method="GET",body){
+const r=await fetch("/api/"+path,{method,credentials:"same-origin",headers:{"Content-Type":"application/json"},body:body===undefined?undefined:JSON.stringify(body)});
+let x=await r.json().catch(()=>({detail:"Request failed"}));if(!r.ok)throw Error(x.detail||r.status);return x;
+}
+function alertText(s){$("#alert").textContent=s}
+function addOpts(selector,rows){$$(selector).forEach(el=>el.innerHTML=rows.map(x=>'<option value="'+esc(x.id)+'">'+esc(x.name)+'</option>').join(""))}
+function item(text,body,buttons=""){return '<div class="item"><strong>'+esc(text)+'</strong><div class="muted">'+esc(body)+'</div><div class="actions">'+buttons+'</div></div>'}
+function button(action,id,label){return '<button class="secondary" data-action="'+action+'" data-id="'+esc(id)+'">'+esc(label)+'</button>'}
+async function refresh(){try{
+const u=await api("me");$("#auth").classList.add("hidden");$("#app").classList.remove("hidden");$("#logout").classList.remove("hidden");$("#who").textContent=u.email;
+const s=await api("state");addOpts(".goal-options",s.goals);addOpts("#project-options",s.projects);
+$("#goals").innerHTML=s.goals.map(g=>item(g.name,g.domain+" · "+g.horizon+(g.protected?" · protected":""))).join("");
+$("#projects").innerHTML=s.projects.map(p=>item(p.name,p.status,[p.status!=="active"?button("project-active",p.id,"開始"):"",p.status==="active"?button("project-paused",p.id,"暫停"):"",button("project-shipped",p.id,"交付驗收")].join(""))).join("");
+$("#tasks").innerHTML=s.tasks.map(t=>item(t.title,t.state+(t.evidence_uri?" · "+t.evidence_uri:""),t.state==="pending"?button("evidence",t.id,"提交證據"):t.state==="awaiting_review"?button("accept",t.id,"驗收"):"")).join("");
+$("#missions").innerHTML=s.missions.map(m=>item(m.instruction,m.state+(m.progress?" · "+m.progress:""),[m.state==="planned"?button("mission-approve",m.id,"審批"):"",m.state==="approved"?button("mission-pause",m.id,"暫停"):"",m.state==="paused"?button("mission-resume",m.id,"恢復"):"",button("mission-note",m.id,"更新進度")].join(""))).join("");
+$("#events").innerHTML=s.events.slice(0,30).map(e=>item(e.event,e.detail||e.mission_id)).join("");
+}catch(e){$("#auth").classList.remove("hidden");$("#app").classList.add("hidden");$("#logout").classList.add("hidden");if(e.message!=="Please sign in")alertText(e.message)}}
+function hook(form,path,shape){$(form).addEventListener("submit",async e=>{e.preventDefault();try{const fd=new FormData(e.target);await api(path,"POST",shape(fd));e.target.reset();alertText("");await refresh()}catch(err){alertText(err.message)}})}
+hook("#goalform","goals",f=>({name:f.get("name"),domain:f.get("domain")}));
+hook("#projectform","projects",f=>({name:f.get("name"),goal_id:f.get("goal_id")}));
+hook("#taskform","tasks",f=>({title:f.get("title"),project_id:f.get("project_id")}));
+hook("#missionform","missions",f=>({instruction:f.get("instruction"),goal_id:f.get("goal_id")}));
+$("#authform").onsubmit=async e=>{e.preventDefault();const f=new FormData(e.target);try{await api("login","POST",{email:f.get("email"),password:f.get("password")});alertText("");await refresh()}catch(x){alertText(x.message)}};
+$("#register").onclick=async()=>{const f=new FormData($("#authform"));try{await api("register","POST",{email:f.get("email"),password:f.get("password")});alertText("");await refresh()}catch(x){alertText(x.message)}};
+$("#logout").onclick=async()=>{await api("logout","POST");location.reload()};
+document.addEventListener("click",async e=>{const b=e.target.closest("button[data-action]");if(!b)return;const id=b.dataset.id,a=b.dataset.action;
+try{if(a.startsWith("project-"))await api("projects/"+id,"PATCH",{state:a.split("-")[1]});
+else if(a==="evidence"){const uri=prompt("請填寫可以驗證的成果檔案網址或路徑");if(!uri)return;await api("tasks/"+id+"/evidence","POST",{uri})}
+else if(a==="accept"){if(!confirm("你已親自檢查並接受這項成果？"))return;await api("tasks/"+id+"/accept","POST")}
+else if(a==="mission-note"){const note=prompt("記錄進度／阻塞");if(note===null)return;await api("missions/"+id+"/note","POST",{note})}
+else if(a.startsWith("mission-"))await api("missions/"+id+"/"+a.split("-")[1],"POST");
+await refresh()}catch(x){alertText(x.message)}});
+refresh();
+</script></body></html>
