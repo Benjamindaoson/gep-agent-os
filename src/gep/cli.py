@@ -6,6 +6,8 @@ import json
 
 from .store import GEPStore
 from .git_context import inspect_repo
+from .ledger import RunLedger
+from .integrations import OpenClaw,OpenHands,IntegrationError
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -48,6 +50,16 @@ def build_parser() -> argparse.ArgumentParser:
     cp = subs.add_parser("checkpoint")
     cp.add_argument("project_id")
     subs.add_parser("overview")
+    subs.add_parser("integrations-status")
+    run=subs.add_parser("run-task")
+    run.add_argument("task_id")
+    run.add_argument("--provider",choices=["openclaw","openhands"],required=True)
+    run.add_argument("--workspace",required=True)
+    run.add_argument("--instruction",required=True)
+    run.add_argument("--approve",action="store_true")
+    check=subs.add_parser("poll-run")
+    check.add_argument("run_id")
+    subs.add_parser("runs")
     repo = subs.add_parser("repo-inspect")
     repo.add_argument("path", help="Path to existing local Git repository")
     activity = subs.add_parser("activity-summary")
@@ -88,6 +100,14 @@ def main(argv: list[str] | None = None) -> None:
                 result["git_workspace"] = inspect_repo(args.repo)
         elif command == "checkpoint":
             result = {"snapshot_id": store.checkpoint(args.project_id)}
+        elif command == "integrations-status":
+            result={"openclaw":OpenClaw().status(),"openhands":OpenHands().status()}
+        elif command == "run-task":
+            result=RunLedger(args.db).launch(args.task_id,args.provider,args.instruction,args.workspace,args.approve)
+        elif command == "poll-run":
+            result=RunLedger(args.db).poll(args.run_id)
+        elif command == "runs":
+            result=RunLedger(args.db).list()
         elif command == "repo-inspect":
             result = inspect_repo(args.path)
         elif command == "activity-summary":
@@ -95,7 +115,7 @@ def main(argv: list[str] | None = None) -> None:
             result = ActivityWatchReader().summary(args.hours)
         else:
             result = store.overview()
-    except (ValueError, OSError) as exc:
+    except (ValueError, OSError, IntegrationError) as exc:
         build_parser().exit(2, f"gep: {exc}\n")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
