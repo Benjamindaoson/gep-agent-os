@@ -17,7 +17,7 @@ GEP is a **goal-aligned personal orchestration layer**. It helps decide whether 
 
 These are **working integration adapters and local orchestration foundations**, not a fully deployed autonomous personal assistant. Real upstream services must be installed/authenticated separately; CI tests mock upstream responses. Cross-device execution, automatic environment rebuilding, and unattended recovery remain future work.
 
-## Quick start (Python 3.11+)
+## Try it locally (Python 3.11+)\n\n```bash\npython -m pip install -e .\ngep --db demo.sqlite demo-init\ngep --db demo.sqlite dashboard\n```\n\nOpen http://127.0.0.1:8765. The demo creates example records only and will not launch an external Agent.\n\n## Quick start (Python 3.11+)
 
 ```bash
 python -m pip install -e .
@@ -53,7 +53,7 @@ ActivityWatch itself has nested submodules; use `git -C upstream/activitywatch s
 - [OpenHands Agent Canvas](https://github.com/OpenHands/OpenHands) — optional coding-agent execution frontend/backend.
 - [n8n](https://github.com/n8n-io/n8n) — **reference/external service only**; its source license imposes restrictions.
 
-See [upstream review](docs/UPSTREAM_REVIEW.md), [architecture](docs/ARCHITECTURE.md), [goal-aware execution](docs/GOAL_EXECUTION_WORKFLOW.md), and [local dashboard](docs/LOCAL_DASHBOARD.md).
+See [implementation status](docs/DELIVERY_STATUS.md), [worker setup](docs/SCHEDULER.md), [workspace recovery](docs/WORKSPACE_RECOVERY.md), [cloud connectors](docs/CLOUD_CONNECTORS.md), and [multi-workflow commands](docs/MULTI_WORKFLOW.md).\n\nSee [upstream review](docs/UPSTREAM_REVIEW.md), [architecture](docs/ARCHITECTURE.md), [goal-aware execution](docs/GOAL_EXECUTION_WORKFLOW.md), and [local dashboard](docs/LOCAL_DASHBOARD.md).
 
 ## Product principles
 

@@ -18,6 +18,7 @@ from .life import LifePortfolio
 from .providers import github_repo,vercel_project,huggingface_dataset
 from .service import ObservationJournal,worker_loop
 from .cloud import CloudCLI,CloudActionError
+from .demo import seed
 from .integrations import OpenClaw,OpenHands,IntegrationError
 
 
@@ -61,6 +62,7 @@ def build_parser() -> argparse.ArgumentParser:
     cp = subs.add_parser("checkpoint")
     cp.add_argument("project_id")
     subs.add_parser("overview")
+    subs.add_parser("demo-init")
     subs.add_parser("cloud-status")
     vercel=subs.add_parser("vercel-preview")
     vercel.add_argument("--workspace",required=True)
@@ -193,6 +195,8 @@ def main(argv: list[str] | None = None) -> None:
                 result["git_workspace"] = inspect_repo(args.repo)
         elif command == "checkpoint":
             result = {"snapshot_id": store.checkpoint(args.project_id)}
+        elif command == "demo-init":
+            result=seed(args.db)
         elif command == "cloud-status":
             result=CloudCLI().status()
         elif command == "vercel-preview":
