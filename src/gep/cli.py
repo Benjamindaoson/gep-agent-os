@@ -9,6 +9,10 @@ from .git_context import inspect_repo
 from .ledger import RunLedger
 from .workflow import run_goal_workflow
 from .dashboard import serve
+from .engine import WorkflowEngine
+from .runner import WorkflowWorker
+from .portfolio import review
+from .resources import recovery_plan
 from .integrations import OpenClaw,OpenHands,IntegrationError
 
 
@@ -52,6 +56,40 @@ def build_parser() -> argparse.ArgumentParser:
     cp = subs.add_parser("checkpoint")
     cp.add_argument("project_id")
     subs.add_parser("overview")
+    createwf=subs.add_parser("workflow-add")
+    createwf.add_argument("project_id")
+    createwf.add_argument("--name",required=True)
+    addstep=subs.add_parser("workflow-step")
+    addstep.add_argument("workflow_id")
+    addstep.add_argument("--title",required=True)
+    addstep.add_argument("--provider",choices=["openclaw","openhands"],required=True)
+    addstep.add_argument("--instruction",required=True)
+    addstep.add_argument("--workspace",required=True)
+    addstep.add_argument("--depends-on",action="append",default=[])
+    wfs=subs.add_parser("workflow-start")
+    wfs.add_argument("workflow_id")
+    wfp=subs.add_parser("workflow-pause")
+    wfp.add_argument("workflow_id")
+    approve=subs.add_parser("workflow-approve")
+    approve.add_argument("step_id")
+    worker=subs.add_parser("worker-once")
+    subs.add_parser("worker-poll")
+    subs.add_parser("workflows")
+    artifact=subs.add_parser("workflow-artifact")
+    artifact.add_argument("step_id")
+    artifact.add_argument("--kind",required=True)
+    artifact.add_argument("--uri",required=True)
+    verified=subs.add_parser("workflow-verify")
+    verified.add_argument("step_id")
+    verified.add_argument("--artifact",required=True)
+    verified.add_argument("--accept",action="store_true")
+    recheck=subs.add_parser("workflow-reconcile")
+    recheck.add_argument("step_id")
+    recheck.add_argument("--state",choices=["pending","awaiting_verification","failed"],required=True)
+    portfolio=subs.add_parser("project-review")
+    portfolio.add_argument("project_id")
+    resource=subs.add_parser("resource-plan")
+    resource.add_argument("manifest")
     subs.add_parser("integrations-status")
     run=subs.add_parser("run-task")
     run.add_argument("task_id")
@@ -111,6 +149,38 @@ def main(argv: list[str] | None = None) -> None:
                 result["git_workspace"] = inspect_repo(args.repo)
         elif command == "checkpoint":
             result = {"snapshot_id": store.checkpoint(args.project_id)}
+        elif command == "workflow-add":
+            result={"workflow_id":WorkflowEngine(args.db).create(args.project_id,args.name)}
+        elif command == "workflow-step":
+            result={"step_id":WorkflowEngine(args.db).step(args.workflow_id,args.title,args.provider,
+                       args.instruction,args.workspace,args.depends_on)}
+        elif command == "workflow-start":
+            WorkflowEngine(args.db).start(args.workflow_id)
+            result={"state":"running"}
+        elif command == "workflow-pause":
+            WorkflowEngine(args.db).pause(args.workflow_id)
+            result={"state":"paused"}
+        elif command == "workflow-approve":
+            WorkflowEngine(args.db).approve(args.step_id)
+            result={"approved":True}
+        elif command == "worker-once":
+            result=WorkflowWorker(args.db).run_once()
+        elif command == "worker-poll":
+            result=WorkflowWorker(args.db).poll_submitted()
+        elif command == "workflows":
+            result=WorkflowEngine(args.db).snapshot()
+        elif command == "workflow-artifact":
+            result={"artifact_id":WorkflowEngine(args.db).artifact(args.step_id,args.kind,args.uri)}
+        elif command == "workflow-verify":
+            WorkflowEngine(args.db).verify(args.step_id,args.artifact,args.accept)
+            result={"verified":True}
+        elif command == "workflow-reconcile":
+            WorkflowEngine(args.db).reconcile(args.step_id,args.state)
+            result={"state":args.state}
+        elif command == "project-review":
+            result=review(args.db,args.project_id)
+        elif command == "resource-plan":
+            result=recovery_plan(args.manifest)
         elif command == "integrations-status":
             result={"openclaw":OpenClaw().status(),"openhands":OpenHands().status()}
         elif command == "run-task":

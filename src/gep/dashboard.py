@@ -4,10 +4,11 @@ import html,json
 from http.server import BaseHTTPRequestHandler,ThreadingHTTPServer
 from .store import GEPStore
 from .ledger import RunLedger
+from .engine import WorkflowEngine
 
 def dashboard_data(db: str)->dict:
     store=GEPStore(db);store.initialize()
-    return {"overview":store.overview(),"runs":RunLedger(db).list()}
+    return {"overview":store.overview(),"runs":RunLedger(db).list(),"workflow":WorkflowEngine(db).snapshot()}
 
 def render(data:dict)->str:
     goals=data["overview"]["goals"];projects=data["overview"]["projects"];runs=data["runs"]
@@ -16,6 +17,9 @@ def render(data:dict)->str:
         '<article><strong>'+escape(p["name"])+'</strong><span>'+escape(p["state"])+
         '</span><small>'+escape(p["id"])+'</small></article>' for p in projects
     ) or '<p class="empty">No projects yet. Create one with the GEP CLI.</p>'
+    work=data.get("workflow",{})
+    stage_items="".join("<article><strong>"+escape(w["name"])+"</strong><span>"+escape(w["state"])+"</span></article>" for w in work.get("workflows",[]))
+    stage_items+="".join("<article>"+escape(s["title"])+" · "+escape(s["state"])+"</article>" for s in work.get("steps",[]))
     goal_items="".join('<li>'+escape(g["name"])+' · '+escape(g["domain"])+'</li>' for g in goals)
     run_rows="".join('<tr><td>'+escape(r["provider"])+'</td><td>'+escape(r["status"])+
        '</td><td>'+escape(r["task_id"])+'</td><td>'+escape(r["updated_at"])+
@@ -37,7 +41,7 @@ footer{margin-top:30px;color:#90a2ba;font-size:12px}</style></head>
 <p>Goals first. Agents execute. Evidence decides what is complete.</p></header>
 <section><h2>Life & learning goals</h2><ul>"""+goal_items+"""</ul></section>
 <section><h2>Projects</h2>"""+cards+"""</section>
-<section><h2>Execution ledger</h2><table>
+<section><h2>Workflow milestones</h2>"""+stage_items+"""</section><section><h2>Execution ledger</h2><table>
 <thead><tr><th>Executor</th><th>Status</th><th>Task ID</th><th>Updated</th></tr></thead>
 <tbody>"""+run_rows+"""</tbody></table></section>
 <footer>Provider-reported completion is not verified delivery. External actions require explicit approval.
