@@ -4,7 +4,7 @@
 
 GEP is a **goal-aligned personal orchestration layer**. It helps decide whether a project deserves attention, connects it to work/learning/life goals, tracks verifiable results, and hands off execution to existing tools. It does not attempt to replace OpenClaw, Codex, GitHub, Vercel, cloud providers, or GPU services.
 
-## Implemented in this initial bootstrap
+## Implemented in the current prototype
 
 - A local SQLite **goal → project → task → evidence** store.
 - Explicit **go/no-go project decisions** and a configurable work-in-progress limit.
@@ -13,9 +13,9 @@ GEP is a **goal-aligned personal orchestration layer**. It helps decide whether 
 - Optional **read-only Git workspace inspection**: commit, branch, dirty/untracked paths, and a warning that uncommitted code still needs backup.
 - Optional **read-only ActivityWatch adapter** for local, privacy-reduced activity summaries.
 - Pin-based upstream Git submodules (not copied/merged code).
-- Unit tests and CI.
+- Unified approved task dispatch to OpenClaw CLI or OpenHands Agent Server, with a SQLite execution ledger and polling.\n- Goal-aware execution briefs with opt-in aggregate ActivityWatch context.\n- Local read-only Mission Control dashboard (127.0.0.1 only).\n- Unit tests and CI.
 
-These are the **first building blocks**, not a finished autonomous personal assistant. Cross-device execution, automatic environment rebuilding, and production connector integrations remain future work.
+These are **working integration adapters and local orchestration foundations**, not a fully deployed autonomous personal assistant. Real upstream services must be installed/authenticated separately; CI tests mock upstream responses. Cross-device execution, automatic environment rebuilding, and unattended recovery remain future work.
 
 ## Quick start (Python 3.11+)
 
@@ -30,7 +30,7 @@ gep --db ./gep.db evidence-add TASK_ID --uri "artifacts/baseline.json" --verifie
 gep --db ./gep.db task-verify TASK_ID
 gep --db ./gep.db handoff PROJECT_ID --repo /path/to/local/git-checkout
 gep --db ./gep.db repo-inspect /path/to/local/git-checkout
-gep --db ./gep.db overview
+gep --db ./gep.db overview\n# Once official OpenClaw CLI / OpenHands server are installed and configured:\ngep --db ./gep.db integrations-status\ngep --db ./gep.db goal-run TASK_ID --provider openclaw --workspace /absolute/project/path --instruction "Deliver one testable milestone" --approve\ngep --db ./gep.db goal-run TASK_ID --provider openhands --workspace /absolute/project/path --instruction "Deliver one testable milestone" --approve\ngep --db ./gep.db runs\ngep --db ./gep.db poll-run RUN_ID\ngep --db ./gep.db dashboard --port 8765
 python -m unittest discover -s tests -v
 ```
 
@@ -53,7 +53,7 @@ ActivityWatch itself has nested submodules; use `git -C upstream/activitywatch s
 - [OpenHands Agent Canvas](https://github.com/OpenHands/OpenHands) — optional coding-agent execution frontend/backend.
 - [n8n](https://github.com/n8n-io/n8n) — **reference/external service only**; its source license imposes restrictions.
 
-See [upstream review](docs/UPSTREAM_REVIEW.md) and [architecture](docs/ARCHITECTURE.md).
+See [upstream review](docs/UPSTREAM_REVIEW.md), [architecture](docs/ARCHITECTURE.md), [goal-aware execution](docs/GOAL_EXECUTION_WORKFLOW.md), and [local dashboard](docs/LOCAL_DASHBOARD.md).
 
 ## Product principles
 
