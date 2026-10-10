@@ -1,0 +1,9 @@
+[submodule "upstream/openclaw"]
+  path = upstream/openclaw
+  url = https://github.com/openclaw/openclaw.git
+[submodule "upstream/activitywatch"]
+  path = upstream/activitywatch
+  url = https://github.com/ActivityWatch/activitywatch.git
+[submodule "upstream/openhands"]
+  path = upstream/openhands
+  url = https://github.com/OpenHands/OpenHands.git

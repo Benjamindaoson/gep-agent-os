@@ -1,7 +1,67 @@
 # GEP Agent OS
 
-**Goal-aligned personal orchestration, not another coding agent.**
+**Your goals, continuously advanced — not another coding agent.**
 
-This repository is being initialized with an original GEP core, adapters, and separately licensed upstream references.
+GEP is a **goal-aligned personal orchestration layer**. It helps decide whether a project deserves attention, connects it to work/learning/life goals, tracks verifiable results, and hands off execution to existing tools. It does not attempt to replace OpenClaw, Codex, GitHub, Vercel, cloud providers, or GPU services.
 
-See `docs/UPSTREAM_REVIEW.md` for source attribution, licensing and integration strategy once the bootstrap commit is complete.
+## Implemented in this initial bootstrap
+
+- A local SQLite **goal → project → task → evidence** store.
+- Explicit **go/no-go project decisions** and a configurable work-in-progress limit.
+- No task can be marked verified without a recorded, verified evidence reference.
+- Resource registry and reproducible JSON handoff for resuming a project in a new session/device.
+- Optional **read-only ActivityWatch adapter** for local, privacy-reduced activity summaries.
+- Pin-based upstream Git submodules (not copied/merged code).
+- Unit tests and CI.
+
+These are the **first building blocks**, not a finished autonomous personal assistant. Cross-device execution, automatic environment rebuilding, and production connector integrations remain future work.
+
+## Quick start (Python 3.11+)
+
+```bash
+python -m pip install -e .
+gep --db ./gep.db init
+gep --db ./gep.db goal-add --name "Embodied AI career" --domain career
+gep --db ./gep.db project-add --name "VLA-Forge experiments" --goal GOAL_ID
+gep --db ./gep.db project-start PROJECT_ID
+gep --db ./gep.db task-add PROJECT_ID --name "Baseline evaluation"
+gep --db ./gep.db evidence-add TASK_ID --uri "artifacts/baseline.json" --verified
+gep --db ./gep.db task-verify TASK_ID
+gep --db ./gep.db handoff PROJECT_ID
+gep --db ./gep.db overview
+python -m unittest discover -s tests -v
+```
+
+Replace the IDs with those printed by the CLI. `--verified` is **human-confirmed evidence** in this prototype; it is not independent machine verification.
+
+## Review the upstream source
+
+The submodules preserve original history/attribution without dumping large repositories into the GEP core.
+
+```bash
+git submodule update --init upstream/activitywatch
+git submodule update --init upstream/openclaw
+git submodule update --init upstream/openhands
+```
+
+ActivityWatch itself has nested submodules; use `git -C upstream/activitywatch submodule update --init <component>` for specific source components. OpenClaw / OpenHands are large repositories; initialize only what you intend to inspect.
+
+- [OpenClaw](https://github.com/openclaw/openclaw) — personal agent gateway / device and tool execution.
+- [ActivityWatch](https://github.com/ActivityWatch/activitywatch) — local activity observation.
+- [OpenHands Agent Canvas](https://github.com/OpenHands/OpenHands) — optional coding-agent execution frontend/backend.
+- [n8n](https://github.com/n8n-io/n8n) — **reference/external service only**; its source license imposes restrictions.
+
+See [upstream review](docs/UPSTREAM_REVIEW.md) and [architecture](docs/ARCHITECTURE.md).
+
+## Product principles
+
+1. **A person is the unit of management**, not a single coding project.
+2. **Goal relevance before execution**; work, learning, rest, and life each have legitimate standing.
+3. **Observed activity is not proof of progress**.
+4. **No unverified success**; preserve task state and evidence.
+5. **Low user-maintenance burden** and opt-in observation.
+6. **Existing tools execute**; GEP coordinates and checks.
+7. **Explicit approval for external side effects** and any spending.
+8. **Portable state and no vendor lock-in.**
+
+No credentials are stored in this repository. The prototype has no browser-control or cloud-spending permissions.
