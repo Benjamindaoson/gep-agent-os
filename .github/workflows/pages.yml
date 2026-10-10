@@ -33,7 +33,7 @@ jobs:
           html=Path("site/index.html").read_text()
           assert '<title>' in html and 'href="styles.css"' in html
           assert 'v0.1.0-alpha.1' in html
-          assert "尚无面向公众运行的托管 SaaS" in html
+          assert "当前没有对公众开放的托管 MOVA 服务" in html
           PY
       - name: Sync site files to gh-pages branch
         run: |
