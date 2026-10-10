@@ -33,5 +33,5 @@ def guard_origin(request:Request):
    parsed=urlparse(origin)
    if parsed.netloc!=host or parsed.scheme not in ("http","https"):
     raise HTTPException(403,"Cross-origin mutation refused")
-  elif request.headers.get("content-type","").split(";")[0].strip()!="application/json":
+  elif request.method!="DELETE" and request.headers.get("content-type","").split(";")[0].strip()!="application/json":
    raise HTTPException(403,"JSON request required")
