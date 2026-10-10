@@ -17,6 +17,7 @@ from .workspace import create_snapshot,restore_snapshot
 from .life import LifePortfolio
 from .providers import github_repo,vercel_project,huggingface_dataset
 from .service import ObservationJournal,worker_loop
+from .cloud import CloudCLI,CloudActionError
 from .integrations import OpenClaw,OpenHands,IntegrationError
 
 
@@ -60,6 +61,18 @@ def build_parser() -> argparse.ArgumentParser:
     cp = subs.add_parser("checkpoint")
     cp.add_argument("project_id")
     subs.add_parser("overview")
+    subs.add_parser("cloud-status")
+    vercel=subs.add_parser("vercel-preview")
+    vercel.add_argument("--workspace",required=True)
+    vercel.add_argument("--approve",action="store_true")
+    subs.add_parser("runpod-list")
+    gpu_start=subs.add_parser("runpod-start")
+    gpu_start.add_argument("pod_id")
+    gpu_start.add_argument("--approve",action="store_true")
+    gpu_stop=subs.add_parser("runpod-stop")
+    gpu_stop.add_argument("pod_id")
+    gpu_stop.add_argument("--approve",action="store_true")
+    gpu_stop.add_argument("--data-backed-up",action="store_true")
     obs=subs.add_parser("activity-import")
     obs.add_argument("--hours",type=int,default=24)
     subs.add_parser("activity-latest")
@@ -180,6 +193,16 @@ def main(argv: list[str] | None = None) -> None:
                 result["git_workspace"] = inspect_repo(args.repo)
         elif command == "checkpoint":
             result = {"snapshot_id": store.checkpoint(args.project_id)}
+        elif command == "cloud-status":
+            result=CloudCLI().status()
+        elif command == "vercel-preview":
+            result=CloudCLI().vercel_preview(args.workspace,args.approve)
+        elif command == "runpod-list":
+            result=CloudCLI().runpod_list()
+        elif command == "runpod-start":
+            result=CloudCLI().runpod_start(args.pod_id,args.approve)
+        elif command == "runpod-stop":
+            result=CloudCLI().runpod_stop(args.pod_id,args.approve,args.data_backed_up)
         elif command == "activity-import":
             result=ObservationJournal(args.db).import_local(args.hours)
         elif command == "activity-latest":
@@ -261,7 +284,7 @@ def main(argv: list[str] | None = None) -> None:
             result = ActivityWatchReader().summary(args.hours)
         else:
             result = store.overview()
-    except (ValueError, OSError, IntegrationError) as exc:
+    except (ValueError, OSError, IntegrationError, CloudActionError) as exc:
         build_parser().exit(2, f"gep: {exc}\n")
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
