@@ -62,3 +62,24 @@ jobs:
           name: gep-android-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Windows Companion dependencies
+        run: python -m pip install -r desktop/requirements.txt
+      - name: Run Windows Companion unit tests
+        run: python -m unittest discover -s desktop/tests -v
+      - name: Build portable Windows EXE
+        run: python -m PyInstaller --onefile --windowed --name GEP-Companion --collect-all keyring desktop/launcher.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: GEP-Windows-Companion
+          path: dist/GEP-Companion.exe
+          if-no-files-found: error
