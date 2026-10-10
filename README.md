@@ -10,12 +10,12 @@
 围绕长期目标，统筹工作、学习、生活、项目与 AI 工作流。  
 不是再做一个 Coding Agent，而是让已有工具、行动和成果朝同一个方向前进。
 
-[**产品官网**](https://benjamindaoson.github.io/gep-agent-os/) · [**获取 Alpha**](https://github.com/Benjamindaoson/gep-agent-os/releases/tag/v0.1.0-alpha.1) · [**功能与开发状态**](#-目前实现状态) · [**反馈与建议**](https://github.com/Benjamindaoson/gep-agent-os/issues)
+[**产品官网（Pages 开启后可访问）**](https://benjamindaoson.github.io/gep-agent-os/) · [**获取 Alpha**](https://github.com/Benjamindaoson/gep-agent-os/releases/tag/v0.1.0-alpha.1) · [**功能与开发状态**](#-目前实现状态) · [**反馈与建议**](https://github.com/Benjamindaoson/gep-agent-os/issues)
 
 ![Status](https://img.shields.io/badge/status-experimental_alpha-84b8d6?style=flat-square)
 ![Windows](https://img.shields.io/badge/Windows-companion-3f8e85?style=flat-square)
 ![Android](https://img.shields.io/badge/Android-companion-3f8e85?style=flat-square)
-![GitHub Pages](https://img.shields.io/badge/site-GitHub_Pages-546781?style=flat-square)
+![GitHub Pages](https://img.shields.io/badge/site-GitHub_Pages_activation_required-546781?style=flat-square)
 
 </div>
 
@@ -132,6 +132,10 @@ gep-agent-os/
 ├── release/               # GitHub Release 元数据
 └── .github/workflows/     # CI、客户端构建、网站发布
 ```
+
+## 产品官网部署
+
+官网源码已发布到 [`gh-pages`](https://github.com/Benjamindaoson/gep-agent-os/tree/gh-pages) 分支。仓库所有者需在 [Settings → Pages](https://github.com/Benjamindaoson/gep-agent-os/settings/pages) 中选择 **Deploy from a branch → gh-pages / (root)** 并保存。以后网站修改会自动同步。详见 [官网发布说明](docs/WEBSITE.md)。
 
 ## 文档与贡献
 

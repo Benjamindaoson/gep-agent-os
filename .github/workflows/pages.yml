@@ -1,4 +1,4 @@
-name: Deploy GEP product website
+name: Sync GEP website to gh-pages
 
 on:
   push:
@@ -9,46 +9,48 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+  contents: write
 
 concurrency:
-  group: github-pages
-  cancel-in-progress: true
+  group: gep-pages-sync
+  cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+  sync:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
         with:
           submodules: false
-      - name: Verify site files and links
+          fetch-depth: 0
+      - name: Validate marketing site
         run: |
           test -s site/index.html
           test -s site/styles.css
           test -s site/assets/gep-mark.svg
           python - <<'PY'
           from pathlib import Path
-          page=Path("site/index.html").read_text()
-          assert '<title>' in page
-          assert 'href="styles.css"' in page
-          assert "v0.1.0-alpha.1" in page
-          assert "尚无面向公众运行的托管 SaaS" in page
+          html=Path("site/index.html").read_text()
+          assert '<title>' in html and 'href="styles.css"' in html
+          assert 'v0.1.0-alpha.1' in html
+          assert "尚无面向公众运行的托管 SaaS" in html
           PY
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
-        with:
-          enablement: true
-      - name: Upload static website
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./site
-      - name: Deploy GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+      - name: Sync site files to gh-pages branch
+        run: |
+          mkdir -p "$RUNNER_TEMP/gep-site"
+          cp -R site/. "$RUNNER_TEMP/gep-site/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin gh-pages
+          git checkout -B gh-pages origin/gh-pages
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R "$RUNNER_TEMP/gep-site/." .
+          git add -A
+          if ! git diff --cached --quiet; then
+            git commit -m "deploy: sync product website from main"
+            git push origin HEAD:gh-pages
+          fi
+
+# One-time repository owner action:
+# Settings -> Pages -> Build and deployment -> Deploy from a branch
+# Branch: gh-pages / (root), Save.
