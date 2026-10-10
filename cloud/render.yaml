@@ -1,0 +1,38 @@
+# Example for Render Blueprint — provision database and secrets in your own account.
+services:
+  - type: web
+    name: gep-web
+    env: docker
+    dockerfilePath: ./cloud/Dockerfile
+    autoDeploy: false
+    envVars:
+      - key: GEP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gep-postgres
+          property: connectionString
+      - key: GEP_SESSION_SECRET
+        generateValue: true
+      - key: GEP_ALLOWED_HOSTS
+        sync: false
+  - type: worker
+    name: gep-worker
+    env: docker
+    dockerfilePath: ./cloud/worker.Dockerfile
+    autoDeploy: false
+    envVars:
+      - key: GEP_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: gep-postgres
+          property: connectionString
+      - key: GEP_MODEL_API_KEY
+        sync: false
+      - key: GEP_MODEL_NAME
+        value: gpt-4.1-mini
+databases:
+  - name: gep-postgres
+    databaseName: gep
+    user: gep
