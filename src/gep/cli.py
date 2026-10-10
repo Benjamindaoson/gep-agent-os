@@ -5,6 +5,7 @@ import argparse
 import json
 
 from .store import GEPStore
+from .git_context import inspect_repo
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -43,9 +44,12 @@ def build_parser() -> argparse.ArgumentParser:
     res.add_argument("--locator", required=True)
     handoff = subs.add_parser("handoff")
     handoff.add_argument("project_id")
+    handoff.add_argument("--repo", help="Optional local Git checkout to include in handoff")
     cp = subs.add_parser("checkpoint")
     cp.add_argument("project_id")
     subs.add_parser("overview")
+    repo = subs.add_parser("repo-inspect")
+    repo.add_argument("path", help="Path to existing local Git repository")
     activity = subs.add_parser("activity-summary")
     activity.add_argument("--hours", type=int, default=24)
     return parser
@@ -80,8 +84,12 @@ def main(argv: list[str] | None = None) -> None:
             result = {"resource_id": store.add_resource(args.project_id, args.role, args.provider, args.locator)}
         elif command == "handoff":
             result = store.handoff(args.project_id)
+            if args.repo:
+                result["git_workspace"] = inspect_repo(args.repo)
         elif command == "checkpoint":
             result = {"snapshot_id": store.checkpoint(args.project_id)}
+        elif command == "repo-inspect":
+            result = inspect_repo(args.path)
         elif command == "activity-summary":
             from .activitywatch import ActivityWatchReader
             result = ActivityWatchReader().summary(args.hours)
