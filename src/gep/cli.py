@@ -7,6 +7,7 @@ import json
 from .store import GEPStore
 from .git_context import inspect_repo
 from .ledger import RunLedger
+from .workflow import run_goal_workflow
 from .integrations import OpenClaw,OpenHands,IntegrationError
 
 
@@ -60,6 +61,13 @@ def build_parser() -> argparse.ArgumentParser:
     check=subs.add_parser("poll-run")
     check.add_argument("run_id")
     subs.add_parser("runs")
+    flow=subs.add_parser("goal-run")
+    flow.add_argument("task_id")
+    flow.add_argument("--provider",choices=["openclaw","openhands"],required=True)
+    flow.add_argument("--workspace",required=True)
+    flow.add_argument("--instruction",required=True)
+    flow.add_argument("--include-activity",action="store_true")
+    flow.add_argument("--approve",action="store_true")
     repo = subs.add_parser("repo-inspect")
     repo.add_argument("path", help="Path to existing local Git repository")
     activity = subs.add_parser("activity-summary")
@@ -106,6 +114,9 @@ def main(argv: list[str] | None = None) -> None:
             result=RunLedger(args.db).launch(args.task_id,args.provider,args.instruction,args.workspace,args.approve)
         elif command == "poll-run":
             result=RunLedger(args.db).poll(args.run_id)
+        elif command == "goal-run":
+            result=run_goal_workflow(args.db,args.task_id,args.provider,args.instruction,
+                                     args.workspace,args.approve,args.include_activity)
         elif command == "runs":
             result=RunLedger(args.db).list()
         elif command == "repo-inspect":
