@@ -31,7 +31,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           html=Path("site/index.html").read_text()
-          assert '<title>' in html and 'href="styles.css"' in html
+          assert '<title>' in html and 'href="styles.css?v=' in html
           assert 'v0.1.0-alpha.1' in html
           assert "当前没有对公众开放的托管 MOVA 服务" in html
           PY
